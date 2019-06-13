@@ -6,4 +6,4 @@ This directory contains example Slurm jobs for various program subdirectories. N
 ## Usage
 To submit an example Slurm job from a program's subdirectory, use the `sbatch` command.
 
-`sbatch <filename.sh>`
+`[slurm/subdirectory] $ sbatch <file.sh>`
