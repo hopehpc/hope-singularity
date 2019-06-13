@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: centos:7
+
+%files
+	mopac7.tar /usr/local/
+
+%post
+	yum update -y
+	yum install -y make
+	yum install -y gcc-gfortran
+	cd /usr/local
+	tar -xvf mopac7.tar
+	chown -R root:root mopac7
+	cd /usr/local/mopac7/source
+	make dynamic
