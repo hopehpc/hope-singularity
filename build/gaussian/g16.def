@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: centos:7
+
+%files
+	g16.tar.bz2 /usr/local/
+
+%environment
+	export g16root=/usr/local
+	export GAUSS_SCRDIR=/tmp
+
+%post
+	yum install -y bzip2
+	cd /etc
+	cp -p group group.bak
+	cp -p gshadow gshadow.bak
+	groupadd -g 499 gaussian
+	cd /usr/local
+	tar -xvf g16.tar.bz2
+	chown -R root:gaussian g16
+	chmod -R o-rwx g16 
+
+%runscript
+	source /usr/local/g16/bsd/g16.profile
+	exec $@
+
