@@ -12,6 +12,6 @@ For more details, see the [Singularity documentation](https://singularity.lbl.go
 `[build/subdirectory] $ singularity build <destination> <source.def> `
 
 ### build.sh usage
-`build.sh` will place images in the directory defined by `SIFDIR` in `globals.sh`.
+`build.sh` takes one argument: the path to a definition file. Note that the command will place images in the directory defined by `SIFDIR` in `globals.sh`.
 
 `[build] $  ./build.sh <subdirectory>/<source.def>`
