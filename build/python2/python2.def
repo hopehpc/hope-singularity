@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: python:2.7 
+
+%post
+	pip install matplotlib
+
+%help
+	This is an example container to demonstrate creating a container from a Docker Python 2.7 image. Additionally, it shows how to install packages using Pip. 
+
+%labels
+	Author	hpc@hope.edu
+	Version	v0.0.1

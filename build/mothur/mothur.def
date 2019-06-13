@@ -1,0 +1,15 @@
+Bootstrap: library
+From: ubuntu:16.04
+
+%post
+	apt-get update
+	apt-get install -y wget unzip
+	mkdir /admin
+	cd /admin
+	wget https://github.com/mothur/mothur/releases/download/v1.42.1/Mothur.linux_64.zip
+	unzip Mothur.linux_64.zip
+	cd mothur
+	ln -s /admin/mothur/mothur /usr/local/bin/mothur
+
+%runscript 
+	mothur	
