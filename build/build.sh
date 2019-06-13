@@ -1,8 +1,15 @@
 #!/bin/bash
 
+if [ "$#" -ne 1 ]; then
+	printf "Usage: ./build.sh <subdirectory>/<source.def>\n\n"
+	exit 1
+fi
+
 source ../globals.sh
 
-DEF=${1#*/}		# remove path prefix of def file 
-SIF=${DEF%.def}.sif	# remove .def and add .sif extension
+DIR=${1///*}
+DEF=${1#*/}								# remove path prefix of def file 
+SIF=${DEF%.def}.sif						# remove .def and add .sif extension
 
-sudo singularity build $SIFDIR/$SIF $1
+cd $DIR									# cd in case there are files needed by the def file in the subdirectory
+sudo singularity build $SIFDIR/$SIF $DEF	# run the build command
