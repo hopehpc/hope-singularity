@@ -1,4 +1,9 @@
 # slurm
 
 ## Description
-This directory contains example Slurm jobs for various programs. Submit a test job by going a program's subdirectory and submitting `sbatch <filename>.sh`. (`config.sh` is not a valid Slurm script`.)
+This directory contains example Slurm jobs for various program subdirectories. Note that `config.sh` is not a valid Slurm script and each subdirectory may contain additional files or scripts needed by the program.
+
+## Usage
+To submit an example Slurm job from a program's subdirectory, use the `sbatch` command.
+
+`[slurm/subdirectory] $ sbatch <file.sh>`
