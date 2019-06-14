@@ -1,12 +1,23 @@
-Bootstrap: docker
-From: python:3.7 
+Bootstrap: library
+From: ubuntu:16.04
 
 %post
-	pip install numpy pandas matplotlib
+	apt-get update && apt-get -y upgrade
+	apt-get install -y build-essential software-properties-common \
+		curl git htop man unzip vim wget nano zlib1g-dev libffi-dev gcc \
+		python3-setuptools
 
-%help
-	This is an example container to demonstrate creating a container from a Docker Python 3.7 image. Additionally, it shows how to install packages using Pip. 
+	VERSION=3.7.3
 
-%labels
-	Author	hpc@hope.edu
-	Version	v0.0.1
+	wget https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tgz
+	gunzip Python-$VERSION.tgz && tar -xvf Python-$VERSION.tar
+	cd Python-$VERSION
+	./configure -prefix=/usr/local/
+
+	make altinstall
+	easy_install-3.7 pip
+	ln -sfn /usr/local/bin/python3.7 /usr/bin/python3
+	pip install --upgrade pip	
+
+%runscript
+	python3
