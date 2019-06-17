@@ -12,12 +12,17 @@ From: ubuntu:16.04
 	wget https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tgz
 	gunzip Python-$VERSION.tgz && tar -xvf Python-$VERSION.tar
 	cd Python-$VERSION
-	./configure -prefix=/usr/local/
-
-	make altinstall
-	easy_install-3.7 pip
+	./configure -prefix=/usr/local
+	#/usr/local
+	make
+	make install
+	#make altinstall
+	#easy_install-3.7 pip
 	ln -sfn /usr/local/bin/python3.7 /usr/bin/python3
-	pip install --upgrade pip	
+	#pip3 install --upgrade pip	
+
+	#wget https://raw.githubusercontent.com/hopehpc/singularity/master/build/scripts/scientific.sh
+	#bash scientific.sh
 
 %runscript
 	python3

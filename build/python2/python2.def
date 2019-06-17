@@ -5,7 +5,7 @@ From: ubuntu:16.04
 	apt-get update && apt-get -y upgrade
 	apt-get install -y build-essential software-properties-common \
 		curl git htop man unzip vim wget nano zlib1g-dev libffi-dev gcc \
-		python3-setuptools
+		python-setuptools 
 
 	VERSION=2.7.16
 
@@ -15,8 +15,15 @@ From: ubuntu:16.04
 	./configure -prefix=/usr/local/
 
 	make altinstall
-	#easy_install-2.7 pip
-	#ln -sfn /usr/local/bin/python3.7 /usr/bin/python3
+	ln -sfn /usr/local/bin/python2.7 /usr/bin/python
+
+	#sed -i '1d' /usr/bin/lsb_release
+	#sed -i '1i#!/usr/bin/python\n' /usr/bin/lsb_release
+	
+	#curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+	#wget https://bootstrap.pypa.io/get-pip.py 
+	#python get-pip.py
+	#pip install -U pip
 
 %runscript
-	#python3
+	python
