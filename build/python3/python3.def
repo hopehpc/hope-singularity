@@ -33,28 +33,10 @@ From: ubuntu:16.04
 
 	# Install Python 3
 	install $PY3VER
-
-	#cd $WORKDIR
-	#wget https://www.python.org/ftp/python/$PY3VER/Python-$PY3VER.tgz
-	#gunzip Python-$PY3VER.tgz && tar -xvf Python-$PY3VER.tar
-	#cd Python-$PY3VER
-	#./configure -prefix=/usr/local
-	#make
-	#make install
-	
 	ln -sfn /usr/local/bin/python3.7 /usr/bin/python3
 	
 	# Install Python 2
 	install $PY2VER
-
-	#cd $WORKDIR
-	#wget https://www.python.org/ftp/python/$PY2VER/Python-$PY2VER.tgz
-	#gunzip Python-$PY2VER.tgz && tar -xvf Python-$PY2VER.tar
-	#cd Python-$PY2VER
-	#./configure -prefix=/usr/local
-	#make
-	#make install
-	
 	ln -sfn /usr/local/bin/python2.7 /usr/bin/python2.7
 	
 	# Install pip3
