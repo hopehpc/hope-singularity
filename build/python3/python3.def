@@ -3,11 +3,20 @@ From: ubuntu:16.04
 
 %post
 	WORKDIR=/			# Full path to directory where Python should be installed in container
-	PIPSCRIPT=base.sh	# Name (without path) of script that installs Python modules via pip
-	PIPPATH=/home/dockeradmin/singularity/build/scripts/$PIPSCRIPT	# Full path to PIPSCRIPT on host machine
-
+	PIPSCRIPT=https://raw.githubusercontent.com/hopehpc/singularity/master/build/scripts/base.sh # Link to script that installs packages via pip
+	PIPNAME=base.sh		# Filename of the script
 	PY2VER=2.7.16		# Python 2 version
 	PY3VER=3.7.3		# Python 3 version
+
+	install() {
+		cd $WORKDIR
+		wget https://www.python.org/ftp/python/$1/Python-$1.tgz
+		gunzip Python-$1.tgz && tar -xvf Python-$1.tar
+		cd Python-$1
+		./configure -prefix=/usr/local
+		make
+		make install
+	}
 
 	apt-get update && apt-get -y upgrade
 
@@ -23,23 +32,29 @@ From: ubuntu:16.04
 		libffi-dev 
 
 	# Install Python 3
-	cd $WORKDIR
-	wget https://www.python.org/ftp/python/$PY3VER/Python-$PY3VER.tgz
-	gunzip Python-$PY3VER.tgz && tar -xvf Python-$PY3VER.tar
-	cd Python-$PY3VER
-	./configure -prefix=/usr/local
-	make
-	make install
+	install $PY3VER
+
+	#cd $WORKDIR
+	#wget https://www.python.org/ftp/python/$PY3VER/Python-$PY3VER.tgz
+	#gunzip Python-$PY3VER.tgz && tar -xvf Python-$PY3VER.tar
+	#cd Python-$PY3VER
+	#./configure -prefix=/usr/local
+	#make
+	#make install
+	
 	ln -sfn /usr/local/bin/python3.7 /usr/bin/python3
 	
 	# Install Python 2
-	cd $WORKDIR
-	wget https://www.python.org/ftp/python/$PY2VER/Python-$PY2VER.tgz
-	gunzip Python-$PY2VER.tgz && tar -xvf Python-$PY2VER.tar
-	cd Python-$PY2VER
-	./configure -prefix=/usr/local
-	make
-	make install
+	install $PY2VER
+
+	#cd $WORKDIR
+	#wget https://www.python.org/ftp/python/$PY2VER/Python-$PY2VER.tgz
+	#gunzip Python-$PY2VER.tgz && tar -xvf Python-$PY2VER.tar
+	#cd Python-$PY2VER
+	#./configure -prefix=/usr/local
+	#make
+	#make install
+	
 	ln -sfn /usr/local/bin/python2.7 /usr/bin/python2.7
 	
 	# Install pip3
@@ -50,15 +65,8 @@ From: ubuntu:16.04
 
 	# Install packages from script
 	cd $WORKDIR
-	bash $PIPSCRIPT	
-	#wget https://raw.githubusercontent.com/hopehpc/singularity/master/build/scripts/scientific.sh
-	#bash scientific.sh
-
-%apprun python3
-	python3
-
-%apprun python2.7
-	python2.7
+	wget $PIPSCRIPT
+	bash $PIPNAME
 
 %runscript
-	python3	# Default to Python 3 if no app specified
+	python3	# Default to Python 3 
