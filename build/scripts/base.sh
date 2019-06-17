@@ -18,7 +18,7 @@ function catch()
 packages=(matplotlib pandas numpy scipy nltk tensorflow scikit-learn
 			requests simplejson scrapy arrow sympy seaborn bokeh
 			plotly theano keras gensim statsmodels regex selenium
-			construct numexpr)
+			construct numexpr milk pyreadline)
 
 printf "Installing packages\n"A
 
