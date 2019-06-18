@@ -12,7 +12,7 @@ download_and_install() {
 }
 
 if [ "$#" -ne 2 ]; then
-    echo "Usage: install-python <Python 2 version> <Python 3 version>
+    printf "Usage: install-python <Python 2 version> <Python 3 version>\n"
     exit 1
 fi
 
