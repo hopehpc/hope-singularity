@@ -26,7 +26,7 @@ do
 	try 
 	{
 		pip3 install $package
-    }
+	}
 
 	catch || 
 	{
