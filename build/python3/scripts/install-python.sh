@@ -19,6 +19,7 @@ fi
 PY2VER=$1
 PY3VER=$2
 WORKDIR=$3
+RETURNDIR=$(PWD)
 
 # Install packages required for pip installation
 # Note: Following line solves SSL module error. See SO question #41328451
@@ -39,3 +40,6 @@ ln -sfn /usr/local/bin/python2.7 /usr/bin/python2.7
 sed -i '1d' /usr/bin/lsb_release
 sed -i '1i#!/usr/bin/python\n' /usr/bin/lsb_release
 pip3 install --upgrade pip
+
+# Return in directory that script was run from
+cd $RETURNDIR
