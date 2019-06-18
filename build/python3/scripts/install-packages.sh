@@ -3,6 +3,7 @@
 packages=("$@")
 ERR=notfound.txt
 
+#TODO
 # Source try/catch functions
 
 printf "Installing Python packages\n\n"

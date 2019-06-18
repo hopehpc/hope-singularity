@@ -2,30 +2,24 @@
 # Script to install Python 2 and 3 in a Singularity container
 
 download_and_install() {
-		cd $WORKDIR
-		wget https://www.python.org/ftp/python/$1/Python-$1.tgz
-		gunzip Python-$1.tgz && tar -xvf Python-$1.tar
-		cd Python-$1
-		./configure -prefix=/usr/local
-		make
-		make install
+	cd $WORKDIR
+	wget https://www.python.org/ftp/python/$1/Python-$1.tgz
+	gunzip Python-$1.tgz && tar -xvf Python-$1.tar
+	cd Python-$1
+	./configure -prefix=/usr/local
+	make
+	make install
 }
 
-if [ "$#" -ne 2 ]; then
-    printf "Usage: install-python <Python 2 version> <Python 3 version>\n"
+if [ "$#" -ne 3 ]; then
+    printf "Usage: install-python <Python 2 version> <Python 3 version> <working directory>\n\n"
     exit 1
 fi
 
 PY2VER=$1
 PY3VER=$2
+WORKDIR=$3
 
-apt-get update && apt-get -y upgrade
-
-# Install basic packages
-apt-get install -y build-essential software-properties-common \
-    curl git htop man unzip vim wget nano gcc \
-		python3-setuptools
-	
 # Install packages required for pip installation
 # Note: Following line solves SSL module error. See SO question #41328451
 apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev \
