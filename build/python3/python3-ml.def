@@ -38,7 +38,7 @@ From: ubuntu:16.04
     dpkg -i cuda-repo-ubuntu1604-10-1-local-10.1.168-418.67_1.0-1_amd64.deb
     apt-key add /var/cuda-repo-10-1-local-10.1.168-418.67/7fa2af80.pub
     apt-get update -y
-    apt-get install -y cuda
+    apt-get install -y --no-install-recommends cuda
 
 %runscript
 	python3	# Default to Python 3 
