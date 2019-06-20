@@ -2,14 +2,13 @@ Bootstrap: library
 From: ubuntu:16.04
 
 %post
-	WORKDIR=/singularity-build	# Full path to directory where Python should be installed in container
-	PY2VER=2.7.16				# Python 2 version
-	PY3VER=3.7.3				# Python 3 version
-	REPO=https://github.com/hopehpc/singularity.git
-	SCRIPTDIR=singularity/build/python3/scripts
-	
+	WORKDIR=/singularity-build	# Full path to directory where Python and Singularity repo should be downloaded in container	
+	PY2VER=2.7.16						# Python 2 version
+	PY3VER=3.7.3						# Python 3 version
+	REPO=https://github.com/hopehpc/singularity.git		# hopehpc Singularity repository
+	SCRIPTDIR=singularity/build/python3/scripts		# Path to installation scripts
 	PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow,
-			scikit-learn, requests, simplejson, regex, selenium"
+			scikit-learn, requests, simplejson, regex, selenium"	
 
 	apt-get update && apt-get -y upgrade
 
@@ -31,4 +30,4 @@ From: ubuntu:16.04
 	bash install-packages.sh $PACKAGES
 	
 %runscript
-	python3	# Default to Python 3 
+	python3	# Default to Python 3
