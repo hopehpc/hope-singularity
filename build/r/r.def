@@ -23,6 +23,8 @@ From: ubuntu:18.04
 	apt-get update
 	apt-get install -y r-base r-base-dev
 	
+	# Install packages	
 	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
+
 %runscript
 	R
