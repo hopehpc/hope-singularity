@@ -1,4 +1,4 @@
-# A wildy inefficient program to print the first 35 Fibonacci numbers
+# A very inefficient program to print the first n Fibonacci numbers
 
 def fib(n):
 	if (n == 0):
@@ -8,5 +8,5 @@ def fib(n):
 	else:
 		return (fib(n-1) + fib(n-2))
 
-for i in range(35):
+for i in range(34):
 	print("When n={}, fib(n)={}".format(i, fib(i)))

@@ -8,8 +8,10 @@ From: ubuntu:16.04
 	REPO=https://github.com/hopehpc/singularity.git
 	SCRIPTDIR=singularity/build/python3/scripts
 	
-	PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow,
-			scikit-learn, requests, simplejson, regex, selenium"
+	#PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow,
+	#			scikit-learn, requests, simplejson, regex, selenium"
+	
+	PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow"
 
 	apt-get update && apt-get -y upgrade
 
