@@ -2,21 +2,27 @@ Bootstrap: library
 From: ubuntu:18.04
 
 %post
+	# Install dependencies
+	apt-get update
+	apt-get install -y --no-install-recommends locales
+
+	# Set locale to avoid R warning messages
+	# Note: code from nikjer/singularity-r:3.5.1 on Singularity Hub
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	locale-gen en_US.utf8
+	/usr/sbin/update-locale LANG=en_US.UTF-8
+	export LC_ALL=en_US.UTF-8
+	export LANG=en_US.UTF-8
+
+	# Install R
 	apt-get install -y ca-certificates gnupg
 	gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 	gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add -
-	#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 	apt-get update
 	echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r.list
 	apt-get update
 	apt-get install -y r-base r-base-dev
-
+	
+	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
 %runscript
 	R
-
-%help
-	This is an example R container. The base operating system is Ubuntu 18.04 from the Container Library.
-
-%labels
-	Author	hpc@hope.edu
-	Version	v0.0.1
