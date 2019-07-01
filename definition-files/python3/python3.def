@@ -1,0 +1,36 @@
+Bootstrap: library
+From: ubuntu:16.04
+
+%post
+	WORKDIR=/singularity-build	# Full path to directory where Python should be installed in container
+	PY2VER=2.7.16				# Python 2 version
+	PY3VER=3.7.3				# Python 3 version
+	REPO=https://github.com/hopehpc/singularity.git
+	SCRIPTDIR=singularity/build/python3/scripts
+	
+	#PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow,
+	#			scikit-learn, requests, simplejson, regex, selenium"
+	
+	PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow"
+
+	apt-get update && apt-get -y upgrade
+
+	# Install basic packages
+	apt-get install -y build-essential software-properties-common \
+		curl git htop man unzip vim wget nano gcc \
+		python3-setuptools
+
+	# Get Singularity repository
+	mkdir $WORKDIR
+	cd $WORKDIR
+	git clone $REPO
+	cd $SCRIPTDIR
+
+	# Run Python installation script
+	bash install-python.sh $PY2VER $PY3VER $WORKDIR
+
+	# Run Python package installation script
+	bash install-packages.sh $PACKAGES
+	
+%runscript
+	python3	# Default to Python 3
