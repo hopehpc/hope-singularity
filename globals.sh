@@ -1,1 +1,1 @@
-SIFDIR=/home/sif
+SIFDIR=/home/hope-singularity/image-files
