@@ -25,6 +25,7 @@ From: ubuntu:18.04
 	
 	# Install packages	
 	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
+	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
 
 %runscript
 	R
