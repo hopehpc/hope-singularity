@@ -52,7 +52,7 @@ $ cat jobscript.sh
 ### Using `singularity run` to run a script
 The `singularity run` command is used to launch a Singularity container and run commands inside of it. Its syntax is `singularity run [run options...] <container>`. Most of our containers are designed to accept arguments passed after `<container>` to mimic regular software usage.
 
-Pick a Singularity image file (`.sif`) to use. `.sif` files that can be used can be found in `/home/hope-singularity/image-files`. For this example, we will use `/home/hope-singularity/image-files/ubuntu/ubuntu.sif`.
+Pick a Singularity image file (`.sif`) to use. `.sif` files that can be used can be found in `/home/hope-singularity/image-files`. For this example, we will use `/home/hope-singularity/image-files/ubuntu.sif`.
 
 Please note:
 + For convienence, the environment variable `$SIF_PATH` can be used instead of `/home/hope-singularity/image-files`.
@@ -108,12 +108,22 @@ First, ensure that your user has executable permissions on `jobscript.sh`. The `
 
 ```bash
 $ sbatch jobscript.sh
-Submitted batch job <n>
+Submitted batch job 42
 ```
-</br>
+
+`sbatch` will output the job ID after it is submitted; in this case, the job ID is 42.</br></br>
 
 ### Checking job status
-pass</br></br>
+To check the status of your job, use the `scontrol command`:
+```bash
+$ scontrol show job 42
+```
+
+You can use the `squeue` command to view all of your running jobs:
+```bash
+$ squeue -u <username>
+```
+</br></br>
 
 ### Viewing job output
 pass</br></br>
