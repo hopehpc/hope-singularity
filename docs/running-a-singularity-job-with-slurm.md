@@ -34,9 +34,12 @@ A complete list of options can be found [here](https://slurm.schedmd.com/sbatch.
 ### Using `singularity run` to run a script
 The `singularity run` command is used to launch a Singularity container and run commands inside of it. Its syntax is `singularity run [run options...] <container>`. Most of our containers are designed to accept arguments passed after `<container>` to mimic regular software usage.
 
-Pick a Singularity image file (`.sif`) to use. The subdirectories within `/home/hope-singularity/image-files` each contain a `.sif`  that can be used. For this example, we will use `/home/hope-singularity/image-files/ubuntu/ubuntu.sif`.
+Pick a Singularity image file (`.sif`) to use. `.sif` files that can be used can be found in `/home/hope-singularity/image-files`. For this example, we will use `/home/hope-singularity/image-files/ubuntu/ubuntu.sif`.
 
-Note that for convienence, the environment variable `$SIF_PATH` can be used instead of `/home/hope-singularity/image-files`.
+Please note:
++ For convienence, the environment variable `$SIF_PATH` can be used instead of `/home/hope-singularity/image-files`.
++ User permissions of each `.sif` file within `$SIF_PATH` will vary. In other words, you may not have access to all of the software on the cluster.
++ `singularity run` usage will vary by container. Look at the subdirectories within hope-singularity/slurm-examples for instructions regarding specific software.
 
 Below are two examples of running a script in a Singularity container.
 
@@ -46,14 +49,14 @@ If you have created a separate script to be called from your job script, ensure 
 ```
 $ cat cow.sh
 echo "Cows go moo!"
-```
 
-Example: `singularity run $SIF_PATH/ubuntu.sif cow.sh`</br></br>
+$ singularity run $SIF_PATH/ubuntu.sif bash cow.sh
+Cows go moo!
+```
+</br></br>
 
 #### Creating a script within your job
-pass
-
-Note that `singularity run` usage will vary by container. Look at the subdirectories within hope-singularity/slurm-examples for instructions regarding specific software.</br></br>
+pass</br></br>
 
 ### Submitting the job
 First, ensure that your user has executable permissions on the `<jobname>.sh`. The `sbatch` command can then be used to submit your job to Slurm.
