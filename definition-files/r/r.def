@@ -2,9 +2,11 @@ Bootstrap: library
 From: ubuntu:18.04
 
 %post
+	PACKAGES="https://raw.githubusercontent.com/hopehpc/hope-singularity/master/definition-files/r/packages.txt"
+
 	# Install dependencies
 	apt-get update
-	apt-get install -y --no-install-recommends locales
+	apt-get install -y --no-install-recommends locales wget
 
 	# Set locale to avoid R warning messages
 	# Note: code from nikjer/singularity-r:3.5.1 on Singularity Hub
@@ -22,10 +24,16 @@ From: ubuntu:18.04
 	echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" | tee /etc/apt/sources.list.d/r.list
 	apt-get update
 	apt-get install -y r-base r-base-dev
+
+	wget $PACKAGES
+	
+	while read -r line; do
+		echo install.packages\(\"$line\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave	
+	done < packages.txt	
 	
 	# Install packages	
-	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
-	echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
+	#echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
+	#echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
 
 %runscript
 	R
