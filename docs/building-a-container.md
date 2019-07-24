@@ -46,8 +46,9 @@ From: ubuntu:16.04
 ```
 
 This header uses CentOS 7 from Docker Hub as a base operating system:
-```java
-//TODO
+```
+Bootstrap: docker
+From: centos:7
 ```
 
 Further documentation on bootstrap agents can be found [here](https://sylabs.io/guides/3.3/user-guide/appendix.html#buildmodules).
@@ -97,10 +98,10 @@ From: centos:7
 
 %post
     yum update -y
-    yum install -y python3
+    yum install -y python
     
 %runscript
-    python3
+    python $@
 ```
 
 Further documentation on sections can be found [here](https://sylabs.io/guides/3.3/user-guide/definition_files.html#sections)</br></br>
@@ -130,9 +131,9 @@ This command would run the `ubuntu.sif` created above:
 $ singularity run ubuntu.sif
 ```
 
-This command would run the `centos.sif` created above:
+This command would run the `centos.sif` created above and run a Python script named `hello.py`:
 ```bash
-$ singularity run centos.sif
+$ singularity run centos.sif hello.py
 ```
 
 To run a job from Slurm using your container, see [Running a Singularity Job with Slurm](running-a-singularity-job-with-slurm.md).
