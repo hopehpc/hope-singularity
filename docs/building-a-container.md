@@ -136,6 +136,6 @@ This command would run the `centos.sif` created above and run a Python script na
 $ singularity run centos.sif hello.py
 ```
 
-To run a job from Slurm using your container, see [Running a Singularity Job with Slurm](running-a-singularity-job-with-slurm.md).
+To submit your container to the cluster, see [Submitting a Container to the Cluster](submitting-a-container-to-the-cluster.md).
 
 Further documentation on the `singularity run` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_run.html?highlight=run).
