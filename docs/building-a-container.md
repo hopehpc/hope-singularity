@@ -9,7 +9,8 @@ Singularity's documentation is thorough and provides clear examples. Therefore, 
     + [Header](#header)
     + [Sections](#sections)
 3. [Creating the Singularity Image File](#creating-the-singularity-image-file)
-4. [Running the Container](#running-the-container)</br></br>
+4. [Running the Container](#running-the-container)
+5. [Next Steps](#next-steps)</br></br>
 
 ## How a Container is Built
 In general, two steps are required before a container can be run:
@@ -136,6 +137,7 @@ This command would run the `centos.sif` created above and run a Python script na
 $ singularity run centos.sif hello.py
 ```
 
-To submit your container to the cluster, see [Submitting a Container to the Cluster](submitting-a-container-to-the-cluster.md).
-
 Further documentation on the `singularity run` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_run.html?highlight=run).
+
+## Next Steps
+To submit your container to the cluster, see [Submitting a Container to the Cluster](submitting-a-container-to-the-cluster.md).
