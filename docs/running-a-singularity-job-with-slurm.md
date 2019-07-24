@@ -10,13 +10,10 @@ This document provides an overview of creating a Slurm job script that uses Sing
 4. [Submitting the job](#submitting-the-job)
 5. [Checking job status](#checking-job-status)
 6. [Viewing job output](#viewing-job-output)
-7. [Other Slurm commands](#other-slurm-commands)
-8. [Examples]()
-    + [Example that calls a separate script]()
-    + [Example that calls a script within the job]()</br></br>
+7. [Other Basic Slurm commands](#other-basic-slurm-commands)</br></br>
 
 ### Creating a job script
-First, create a file named `<jobname>.sh` in your home directory. For this document, we will call our job script `jobscript.sh`
+First, create a file named `<jobname>.sh` in your home directory. For this document, we will call the job script `jobscript.sh`
 
 Add a shebang to the beginning of `jobscript.sh`:
 
@@ -27,7 +24,7 @@ $ cat jobscript.sh
 </br>
 
 ### Adding job options
-Job options can be added to the beginning of your script. Each line should start with `#SBATCH` and be followed by a job option. Below is a basic list of options with their #PBS analogues. 
+Job options can be added to the beginning of your script. Each line should start with `#SBATCH` and be followed by a job option. Below is a basic list of options with their `#PBS` analogues. 
 
 | `#PBS` | `#SBATCH` | Definition |
 | --- | --- | --- |
@@ -57,15 +54,15 @@ Pick a Singularity image file (`.sif`) to use. `.sif` files that can be used can
 Please note:
 + For convienence, the environment variable `$SIF_PATH` can be used instead of `/home/hope-singularity/image-files`.
 + User permissions of each `.sif` file within `$SIF_PATH` will vary. In other words, you may not have access to all of the software on the cluster.
-+ `singularity run` usage will vary by container. Look at the subdirectories within hope-singularity/slurm-examples for instructions regarding specific software.
++ `singularity run` usage will vary by container. Look at the subdirectories within `/home/hope-singularity/slurm-examples` for instructions regarding specific software.
 
-Below are two examples of running a script in a Singularity container.
+Below are two examples of running a script in a Singularity container through `jobscript.sh`.
 
 #### Calling a separate script from your job
-If you have created a separate script to be called from your job script, ensure that your user has executable permissions on it. Below is an example of a script named `cow.sh` being run inside of an `ubuntu.sif` container from the command line.
+If you have created a separate script to be called from your job script, ensure that your user has executable permissions on it. Below is an example of a script named `moo.sh` being run inside of an `ubuntu.sif` container from the command line.
 
 ```bash
-$ cat cow.sh
+$ cat moo.sh
 echo "Cows go moo!"
 
 $ singularity run $SIF_PATH/ubuntu.sif bash cow.sh
@@ -123,10 +120,25 @@ You can use the `squeue` command to view all of your running jobs:
 ```bash
 $ squeue -u <username>
 ```
-</br></br>
+</br>
 
 ### Viewing job output
-pass</br></br>
+By default, Slurm will combine the output and error files of a job into one file named `slurm-<job-ID>.out`. The output and error files can be separated by using the `--error` and `--output` job options.
 
-### Other Slurm commands
-pass</br></br>
+The output of `slurm-42.out` would show the contents of `moo.sh`:
+```bash
+$ cat slurm-42.out
+Cows go moo!
+```
+</br>
+
+### Other Basic Slurm commands
+| Command | Definition |
+| --- | --- |
+| `sbatch <jobscript>` | submit a job script to the queue |
+| `squeue -u <username>` | check the jobs of a particular user in the queue |
+| `salloc <options>` | request an interactive job |
+| `squeue --start` | show estimated start time |
+| `squeue -p <partition>` | display queue/partition entries |
+| `scontrol show job <job-ID>` | show job details |
+| `qdel <job-ID>` | delete a job |</br></br>
