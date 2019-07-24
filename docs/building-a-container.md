@@ -26,6 +26,8 @@ A Singularity Definition File (def file) has two parts:
 1. **Header**: The core operating system to build within the container. You can specify the Linux distribution, the specific version, and the packages that must be a part of the core install.
 2. **Sections**: The rest of the def file contains sections defined by a `%` character. All sections are optional, and a def file can contain more than one instance of a section. Sections that are executed at build time or that produce scripts to be executed at runtime can accept `/bin/sh` options.
 
+A def file can be created in any text editor, and we recommend using a `.def` extension.
+
 ### Header
 The header should be written at the top of the def file. It tells Singularity about the base operating system that should be used to build in the container, and it is composed of many keywords.
 
@@ -66,7 +68,7 @@ The `%environment` section defines environment variables that will be set at run
 The `%runscript` is executed when the container is run with `singularity run`. When the container is invoked, arguments following the container name are passed to the runscript. This means that you can and should process arguments within your runscript.
 
 #### Examples
-The following example uses the Ubuntu header from above:
+The following example uses the Ubuntu header from above to create a def file named `ubuntu.def`:
 ```
 Bootstrap: library
 From: ubuntu:16.04
@@ -78,8 +80,8 @@ From: ubuntu:16.04
     export N=42
     
 %post
-    apt-get update
-    apt-get install git
+    apt-get update -y
+    apt-get install -y git
     git clone https://github.com/hopehpc/hope-singularity.git
     cd hope-singularity
     
@@ -88,14 +90,14 @@ From: ubuntu:16.04
     exec echo "$@"
 ```
 
-This example uses the CentOS header from above:
+This example uses the CentOS header from above to create `centos.def`:
 ```
 Bootstrap: docker
 From: centos:7
 
 %post
-    yum update
-    yum install python3
+    yum update -y
+    yum install -y python3
     
 %runscript
     python3
@@ -104,6 +106,35 @@ From: centos:7
 Further documentation on sections can be found [here](https://sylabs.io/guides/3.3/user-guide/definition_files.html#sections)</br></br>
 
 ## Creating the Singularity Image File
-</br></br>
+Once the def file is written, the `singularity build` command can be used to build a `.sif` file.
+
+### Examples
+The following example would create `ubuntu.sif` from `ubuntu.def` above:
+```bash
+$ singularity build ubuntu.sif ubuntu.def
+```
+
+This example would create `centos.sif` from `centos.def` above:
+```bash
+$ singularity build centos.sif centos.def
+```
+
+Further documentation on the `singularity build` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_build.html).</br></br>
 
 ## Running the Container 
+Containers can be run using the `singularity run` command.
+
+### Examples
+This command would run the `ubuntu.sif` created above:
+```bash
+$ singularity run ubuntu.sif
+```
+
+This command would run the `centos.sif` created above:
+```bash
+$ singularity run centos.sif
+```
+
+To run a job from Slurm using your container, see [Running a Singularity Job with Slurm](running-a-singularity-job-with-slurm.md).
+
+Further documentation on the `singularity run` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_run.html?highlight=run).
