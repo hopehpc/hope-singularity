@@ -2,14 +2,22 @@ Bootstrap: library
 From: ubuntu:16.04
 
 %post
+	# Mothur executable
+	MOTHUR=https://github.com/mothur/mothur/releases/download/v.1.42.3/Mothur.linux_64.zip
+
+	# Download dependencies
 	apt-get update
-	apt-get install -y wget unzip
-	mkdir /admin
-	cd /admin
-	wget https://github.com/mothur/mothur/releases/download/v1.42.1/Mothur.linux_64.zip
+	apt-get install -y wget unzip build-essential
+	
+	# Download mothur
+	mkdir /mothur
+	cd /mothur
+	wget $MOTHUR
 	unzip Mothur.linux_64.zip
+	
+	# Create symlink to executable
 	cd mothur
-	ln -s /admin/mothur/mothur /usr/local/bin/mothur
+	ln -s /mothur/mothur/mothur /usr/local/bin/mothur
 
 %runscript 
-	mothur	
+	mothur $@
