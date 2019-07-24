@@ -137,7 +137,7 @@ This command would run the `centos.sif` created above and run a Python script na
 $ singularity run centos.sif hello.py
 ```
 
-Further documentation on the `singularity run` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_run.html?highlight=run).
+Further documentation on the `singularity run` command can be found [here](https://sylabs.io/guides/3.3/user-guide/cli/singularity_run.html?highlight=run).</br></br>
 
 ## Next Steps
 To submit your container to the cluster, see [Submitting a Container to the Cluster](submitting-a-container-to-the-cluster.md).
