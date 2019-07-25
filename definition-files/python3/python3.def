@@ -1,36 +1,35 @@
 Bootstrap: library
 From: ubuntu:16.04
 
-%post
-	WORKDIR=/singularity-build	# Full path to directory where Python should be installed in container
-	PY2VER=2.7.16				# Python 2 version
-	PY3VER=3.7.3				# Python 3 version
-	REPO=https://github.com/hopehpc/hope-singularity.git
-	SCRIPTDIR=hope-singularity/definition-files/python3/scripts
-	
-	#PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow,
-	#			scikit-learn, requests, simplejson, regex, selenium"
-	
-	PACKAGES="matplotlib, pandas, numpy, scipy, nltk, tensorflow"
+%setup
+	# Directory will installation scripts and other files will be stored
+	mkdir ${SINGULARITY_ROOTFS}/singularity-build
 
-	apt-get update && apt-get -y upgrade
+%files
+	# Copy files from the host machine
+	/home/hope-singularity/definition-files/python3/packages/base.txt /singularity-build/base.txt
+	/home/hope-singularity/definition-files/python3/scripts/install-packages.sh /singularity-build/install-packages.sh
+	/home/hope-singularity/definition-files/python3/scripts/install-python.sh /singularity-build/install-python.sh
+
+
+%post
+	WORKDIR=/singularity-build
+	PY2VER=2.7.16
+	PY3VER=3.7.3
 
 	# Install basic packages
+	apt-get update && apt-get -y upgrade
 	apt-get install -y build-essential software-properties-common \
-		curl git htop man unzip vim wget nano gcc \
+		curl htop man unzip wget gcc \
 		python3-setuptools
-
-	# Get Singularity repository
-	mkdir $WORKDIR
-	cd $WORKDIR
-	git clone $REPO
-	cd $SCRIPTDIR
+	
+	cd /singularity-build
 
 	# Run Python installation script
 	bash install-python.sh $PY2VER $PY3VER $WORKDIR
 
 	# Run Python package installation script
-	bash install-packages.sh $PACKAGES
-	
+	bash install-packages.sh base.txt
+
 %runscript
-	python3	# Default to Python 3
+	python3	$@ # Default to Python 3 and accept arguments
