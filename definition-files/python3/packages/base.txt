@@ -6,3 +6,8 @@ nltk
 tensorflow
 scikit-learn
 selenium
+pillow
+requests
+seaborn
+plotly
+
