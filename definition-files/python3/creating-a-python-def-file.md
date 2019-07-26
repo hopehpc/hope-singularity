@@ -62,7 +62,7 @@ These commands copy all of the required files to the container filesystem.
         WORKDIR=/singularity-build  # Working directory in container created during %setup
         PY2VER=2.7.16               # Python 2 version
         PY3VER=3.7.3                # Python 3 version
-        PACKAGES=base.txt           # Name of the package list to install
+        PACKAGES=base.txt           # Package list to install
         
         # Install basic packages
         apt-get update && apt-get -y upgrade
