@@ -15,6 +15,7 @@ From: ubuntu:16.04
 	WORKDIR=/singularity-build	# Working directory in container created during %setup
 	PY2VER=2.7.16			# Python 2 version
 	PY3VER=3.7.3			# Python 3 version
+	PACKAGES=base.txt		# Package list to install
 
 	# Install basic packages
 	apt-get update && apt-get -y upgrade
@@ -28,7 +29,7 @@ From: ubuntu:16.04
 	bash install-python.sh $PY2VER $PY3VER $WORKDIR
 
 	# Run Python package installation script
-	bash install-packages.sh base.txt
+	bash install-packages.sh $PACKAGES
 
 %runscript
 	python3	$@	# Default to Python 3 and accept command-line arguments
