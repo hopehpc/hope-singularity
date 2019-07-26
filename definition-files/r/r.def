@@ -1,12 +1,19 @@
 Bootstrap: library
 From: ubuntu:18.04
 
+%setup
+	mkdir ${SINGULARITY_ROOTFS}/singularity-build
+
+%files
+	/home/hope-singularity/definition-files/r/packages/base.txt /singularity-build/base.txt	
+
 %post
-	PACKAGES="https://raw.githubusercontent.com/hopehpc/hope-singularity/master/definition-files/r/packages.txt"
+	WORKDIR=/singularity-build	# Directory created in %setup
+	PACKAGES=base.txt		# Base packages to install
 
 	# Install dependencies
 	apt-get update
-	apt-get install -y --no-install-recommends locales wget
+	apt-get install -y --no-install-recommends locales
 
 	# Set locale to avoid R warning messages
 	# Note: code from nikjer/singularity-r:3.5.1 on Singularity Hub
@@ -25,15 +32,10 @@ From: ubuntu:18.04
 	apt-get update
 	apt-get install -y r-base r-base-dev
 
-	wget $PACKAGES
-	
+	# Read each line of $PACKAGES and install
 	while read -r line; do
 		echo install.packages\(\"$line\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave	
-	done < packages.txt	
+	done < $PACKAGES
 	
-	# Install packages	
-	#echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
-	#echo install.packages\(\"ggplot2\"\, repos\=\'https://cloud.r-project.org\'\) | R --slave
-
 %runscript
-	R
+	R $@
