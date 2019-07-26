@@ -2,20 +2,19 @@ Bootstrap: library
 From: ubuntu:16.04
 
 %setup
-	# Directory will installation scripts and other files will be stored
+	# Working directory where installation scripts and other files will be stored
 	mkdir ${SINGULARITY_ROOTFS}/singularity-build
 
 %files
 	# Copy files from the host machine
-	/home/hope-singularity/definition-files/python3/packages/base.txt /singularity-build/base.txt
-	/home/hope-singularity/definition-files/python3/scripts/install-packages.sh /singularity-build/install-packages.sh
-	/home/hope-singularity/definition-files/python3/scripts/install-python.sh /singularity-build/install-python.sh
-
+	scripts/install-python.sh /singularity-build/install-python.sh		# Python installation script
+	scripts/install-packages.sh /singularity-build/install-packages.sh	# Package installation script
+	packages/base.txt /singularity-build/base.txt				# Packages to install
 
 %post
-	WORKDIR=/singularity-build
-	PY2VER=2.7.16
-	PY3VER=3.7.3
+	WORKDIR=/singularity-build	# Working directory in container created during %setup
+	PY2VER=2.7.16			# Python 2 version
+	PY3VER=3.7.3			# Python 3 version
 
 	# Install basic packages
 	apt-get update && apt-get -y upgrade
@@ -23,7 +22,7 @@ From: ubuntu:16.04
 		curl htop man unzip wget gcc \
 		python3-setuptools
 	
-	cd /singularity-build
+	cd $WORKDIR
 
 	# Run Python installation script
 	bash install-python.sh $PY2VER $PY3VER $WORKDIR
@@ -32,4 +31,4 @@ From: ubuntu:16.04
 	bash install-packages.sh base.txt
 
 %runscript
-	python3	$@ # Default to Python 3 and accept arguments
+	python3	$@	# Default to Python 3 and accept command-line arguments
