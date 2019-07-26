@@ -11,6 +11,8 @@ From: ubuntu:18.04
 	WORKDIR=/singularity-build	# Directory created in %setup
 	PACKAGES=base.txt		# Base packages to install
 
+	cd $WORKDIR
+	
 	# Install dependencies
 	apt-get update
 	apt-get install -y --no-install-recommends locales
