@@ -8,6 +8,3 @@ scikit-learn
 selenium
 pillow
 requests
-seaborn
-plotly
-
