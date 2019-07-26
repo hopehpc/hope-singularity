@@ -7,9 +7,9 @@ From: ubuntu:16.04
 
 %files
 	# Copy files from the host machine
-	scripts/install-python.sh /singularity-build/install-python.sh		# Python installation script
-	scripts/install-packages.sh /singularity-build/install-packages.sh	# Package installation script
-	packages/base.txt /singularity-build/base.txt				# Packages to install
+	/home/hope-singularity/definition-files/python3/scripts/install-python.sh /singularity-build/install-python.sh
+	/home/hope-singularity/definition-files/python3/scripts/install-packages.sh /singularity-build/install-packages.sh
+	/home/hope-singularity/definition-files/python3/packages/base.txt /singularity-build/base.txt
 
 %post
 	WORKDIR=/singularity-build	# Working directory in container created during %setup
@@ -23,7 +23,7 @@ From: ubuntu:16.04
 		python3-setuptools
 	
 	cd $WORKDIR
-
+	ls
 	# Run Python installation script
 	bash install-python.sh $PY2VER $PY3VER $WORKDIR
 
