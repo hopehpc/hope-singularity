@@ -73,10 +73,10 @@ These commands copy all of the required files to the container filesystem.
         cd $WORKDIR
 
         # Run Python installation script
-        bash install-python.sh $PY2VER $PY3VER $WORKDIR
+        ./install-python.sh $PY2VER $PY3VER $WORKDIR
 
         # Run Python package installation script
-        bash install-packages.sh $PACKAGES
+        ./install-packages.sh $PACKAGES
 ```
 The `$PY2VER` and `$PY3VER` environment variables set the versions of Python to install and are passed to `install-python`. `$PACKAGES` should be set to the file copied to the container during the `%files` section.  
 
