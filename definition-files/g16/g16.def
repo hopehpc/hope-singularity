@@ -13,10 +13,10 @@ From: centos:7
 	cd /etc
 	cp -p group group.bak
 	cp -p gshadow gshadow.bak
-	groupadd -g 499 gaussian
+	groupadd -g 499 g16
 	cd /usr/local
 	tar -xvf g16.tar.bz2
-	chown -R root:gaussian g16
+	chown -R root:g16 g16
 	chmod -R o-rwx g16 
 
 %runscript
