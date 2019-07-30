@@ -1,16 +1,44 @@
 Bootstrap: docker
 From: nvidia/cuda:8.0-devel-ubuntu16.04
 
+%setup	
+	# Make a directory to store compiled CUDA samples
+	mkdir ${SINGULARITY_ROOTFS}/singularity-build
+	mkdir ${SINGULARITY_ROOTFS}/singularity-build/cuda-samples
+
 %environment
-	# so that nvcc is found
+	# Path to CUDA programs
 	export PATH=$PATH:/usr/local/cuda/bin 
 
+	# Path to compiled samples created in %setup
+	export CUDA_SAMPLES=/singularity-build/cuda-samples
+
 %post
+	# Directory to put compiled CUDA samples from %setup and %environment
+	COMPILED=/singularity-build/cuda-samples
+
+	# Set of samples to use
+	SAMPLE_DIR="/usr/local/cuda-8.0/samples/0_Simple"
+
+	# Samples within sample directory to compile (listed as their directory name)
+	SAMPLES="cdpSimpleQuicksort matrixMul simpleMultiCopy simpleMultiGPU vectorAdd"
+	
+	# Install required dependencies
 	apt-get update -y
 	apt-get upgrade -y
 	apt-get install -y build-essential software-properties-common \
                 curl git unzip vim wget gcc
 	
+	# Install CUDA samples
 	apt-get install -y --no-install-recommends cuda-samples-8.0
-	cd /usr/local/cuda-8.0/samples/0_Simple/cdpSimpleQuicksort
-	make
+	
+	# Compile CUDA samples
+	cd $SAMPLE_DIR
+	
+	for sample in ${SAMPLES}
+	do
+		cd $sample
+		make
+		cp $sample $COMPILED
+		cd ..
+	done
