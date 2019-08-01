@@ -25,6 +25,3 @@ From: ubuntu:16.04
 	cp blastall $DEST
 	cp formatdb $DEST
 	cp megablast $DEST
-
-%runscript 
-	mothur $@
