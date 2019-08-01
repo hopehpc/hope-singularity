@@ -14,10 +14,17 @@ From: ubuntu:16.04
 	cd /mothur
 	wget $MOTHUR
 	unzip Mothur.linux_64.zip
-	
-	# Create symlink to executable
 	cd mothur
-	ln -s /mothur/mothur/mothur /usr/local/bin/mothur
+
+	# Copy executables to /usr/bin
+	DEST=/usr/bin
+	cp mothur $DEST
+	cp uchime $DEST
+	cp vsearch $DEST
+	cd blast/bin 
+	cp blastall $DEST
+	cp formatdb $DEST
+	cp megablast $DEST
 
 %runscript 
 	mothur $@
