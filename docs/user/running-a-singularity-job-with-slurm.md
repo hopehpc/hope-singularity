@@ -1,7 +1,7 @@
 # Running a Singularity Job with Slurm
 This document provides an overview of creating a Slurm job script that uses Singularity.</br></br>
 
-## Table of Contents
+## Contents
 1. [Creating a job script](#creating-a-job-script)
 2. [Adding job options](#adding-job-options)
 3. [Using `singularity run` to run a script](#using-singularity-run-to-run-a-script)
@@ -52,8 +52,8 @@ The `singularity run` command is used to launch a Singularity container and run 
 Pick a Singularity image file (`.sif`) to use. `.sif` files that can be used can be found in `/home/hope-singularity/image-files`. For this example, we will use `/home/hope-singularity/image-files/ubuntu.sif`.
 
 Please note:
-+ For convienence, the environment variable `$SIF_PATH` can be used instead of `/home/hope-singularity/image-files`.
-+ User permissions of each `.sif` file within `$SIF_PATH` will vary. In other words, you may not have access to all of the software on the cluster.
++ For convienence, the environment variable `$SIF_FILES` can be used instead of `/home/hope-singularity/image-files`.
++ User permissions of each `.sif` file within `$SIF_FILES` will vary. In other words, you may not have access to all of the software on the cluster.
 + `singularity run` usage will vary by container. Look at the subdirectories within `/home/hope-singularity/slurm-examples` for instructions regarding specific software.
 
 Below are two examples of running a script in a Singularity container through `jobscript.sh`.
@@ -65,7 +65,7 @@ If you have created a separate script to be called from your job script, ensure 
 $ cat moo.sh
 echo "Cows go moo!"
 
-$ singularity run $SIF_PATH/ubuntu.sif bash cow.sh
+$ singularity run $SIF_FILES/ubuntu.sif bash cow.sh
 Cows go moo!
 ```
 
@@ -77,7 +77,7 @@ $!/bin/bash
 
 #SBATCH --job-name=cows
 
-singularity run $SIF_PATH/ubuntu.sif bash cow.sh
+singularity run $ SIF_FILES/ubuntu.sif bash cow.sh
 ```
 </br>
 
@@ -96,7 +96,7 @@ echo "Cows go moo!"
 
 EOF
 
-singularity run $SIF_PATH/ubuntu.sif bash moo.sh
+singularity run $SIF_FILES/ubuntu.sif bash moo.sh
 ```
 </br>
 
