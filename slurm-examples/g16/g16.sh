@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --ntasks=2
 
-JOBNAME="g16"
-IMAGE="$SIF_PATH/g16.sif"
+JOB_NAME=g16
+SIF_FILE=${SIF_PATH}/g16.sif
 
-singularity run $IMAGE g16 <$JOBNAME.inp >$JOBNAME.out 2>$JOBNAME.err
+singularity run $SIF_FILE g16 <$JOB_NAME.inp >$JOB_NAME.out 2>$JOB_NAME.err
