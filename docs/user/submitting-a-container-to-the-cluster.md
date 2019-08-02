@@ -1,9 +1,9 @@
 # Submitting a Container to the Cluster
 You've got a container! Now what? 
 
-This document describes the process of submitting a personal container to the cluster.
+This document describes the process of submitting a personal container to the cluster.<br><br>
 
-## Table of Contents
+## Contents
 1. [Container Building Guidelines](#container-building-guidelines)
     + [Security](#security)
     + [Licensing](#licensing)
