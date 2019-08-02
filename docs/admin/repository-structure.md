@@ -9,11 +9,10 @@ This document describes the purpose and structure of the `hope-singularity` repo
     + [slurm-examples](#slurm-examples)
 3. [Other Important Files](#other-important-files)
     + [.gitignore](#gitignore)
-    + [globals.sh](#globals.sh)
 <br>
 
 ## Purpose
-The purpose of `hope-singularity` is to contain Singularity definition files and example submission scripts for Hope's cluster.
+The purpose of `hope-singularity` is to contain Singularity definition files and example submission scripts for Hope's cluster. It is located at `/home/hope-singularity` on the cluster and is NFS-shared to all of the compute nodes.
 <br><br>
 
 ## Directories
@@ -35,6 +34,3 @@ This directory contains example Slurm job submission scripts for various program
 
 ### .gitignore
 This file contains a list of files or directories within the repository to be ignored by Git. It should contain at least one entry for all of the sif files: `image-files/*.sif`. Any tarballs or licensed software should be included here.
-
-### globals.sh
-This file contains variables that are used by other scripts within the repository.
