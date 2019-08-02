@@ -1,9 +1,9 @@
 # Building a Container
 This document describes the basic process of building a container. It is adapted from the [Singularity documentation](https://sylabs.io/guides/3.3/user-guide/index.html).
 
-Singularity's documentation is thorough and provides clear examples. Therefore, this document will only cover essential parts of the build process; it will refer you to the Singularity documentation for more detail when necessary.
+Singularity's documentation is thorough and provides clear examples. Therefore, this document will only cover essential parts of the build process; it will refer you to the Singularity documentation for more detail when necessary.<br><br>
 
-## Table of Contents
+## Contents
 1. [How a Container is Built](#how-a-container-is-built)
 2. [Writing the Definition File](#writing-the-definition-file)
     + [Header](#header)
