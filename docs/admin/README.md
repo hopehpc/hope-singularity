@@ -1,4 +1,4 @@
-# Administrator Documentation
+# admin 
 This directory contains the administratory documentation for the repository.<br><br>
 
 ## Contents
