@@ -2,12 +2,12 @@
 This document explains how images can be built from definition files within this repository. It is not an explaination on how images are built or how definition files are written.<br><br>
 
 ## Contents
-1. [Building from build.sh (recommended)](#building-from-build.sh)
+1. [Building from build.sh (recommended)](#building-from-buildsh)
 2. [Building Manually](#building-manually)
 <br>
 
 ## Building from build.sh
-`definition-files` contains a script `build.sh` that should be used to build sif files from the def files in the directory. The script runs the `singularity build` command and builds images in the location specified by `$SIF_FILES` in `globals.sh`. 
+`definition-files` contains a script `build.sh` that should be used to build sif files from the def files in the directory. The script runs the `singularity build` command and builds images in the location specified by `$SIF_FILES` in `/etc/profile.d/singularity.sh` (created during the cluster build process; located [here](https://github.com/hopehpc/cluster-scripts/tree/master/profile.d). 
   
 Additionally, the script creates the sif file with an appropriate name: it only changes the extension from `.def` to `.sif`.
 
