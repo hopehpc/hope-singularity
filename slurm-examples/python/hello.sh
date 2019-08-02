@@ -2,6 +2,7 @@
 
 #SBATCH --job-name=hello
 
-source config.sh
+$SIF_FILE=${SIF_FILES}/python.sif
+$SCRIPT=scripts/hello.py
 
-singularity exec $PYSIF python3 $PYSRC/hello.py
+singularity exec $SIF_FILE python3 $SCRIPT

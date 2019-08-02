@@ -2,6 +2,7 @@
 
 #SBATCH --job-name=histogram
 
-source config.sh
+$SIF_FILE=${SIF_FILES}/python.sif
+$SCRIPT=scripts/histogram.py
 
-singularity exec $PYSIF python3 $PYSRC/histogram.py
+singularity exec $SIF_FILE python3 $SCRIPT

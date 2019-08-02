@@ -2,6 +2,7 @@
 
 #SBATCH --job-name=fib
 
-source config.sh
+$SIF_FILE=${SIF_FILES}/python.sif
+$SCRIPT=scripts/fibonacci.py
 
-singularity exec $PYSIF python3 $PYSRC/fibonacci.py
+singularity exec $SIF_FILE python3 $SCRIPT
