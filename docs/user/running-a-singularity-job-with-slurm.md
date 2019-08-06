@@ -7,6 +7,7 @@ This document provides an overview of creating a Slurm job script that uses Sing
 3. [Using `singularity run` to run a script](#using-singularity-run-to-run-a-script)
     + [Calling a separate script from your job](#calling-a-separate-script-from-your-job)
     + [Creating a script within your job](#creating-a-script-within-your-job)
+4. [Using a GPU-enabled container](#using-a-gpu-enabled-container)
 4. [Submitting the job](#submitting-the-job)
 5. [Checking job status](#checking-job-status)
 6. [Viewing job output](#viewing-job-output)
@@ -97,6 +98,14 @@ echo "Cows go moo!"
 EOF
 
 singularity run $SIF_FILES/ubuntu.sif bash moo.sh
+```
+<br>
+
+### Using a GPU-enabled container
+If you are using a container that is GPU-enabled, you can use the `--nv` flag with `singularity run` to access the GPU drivers on the host machine:
+
+```bash
+$ singularity run --nv $SIF_FILES/cuda.sif
 ```
 </br>
 
