@@ -1,0 +1,22 @@
+Bootstrap: library
+From: ubuntu:16.04
+
+%setup
+	# Create a directory to store any files copied over or created
+	mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+	# Copy the base package install script
+	/home/hope-singularity/definition-files/base/scripts/ubuntu-16-04.sh /hope-singularity-wd/ubuntu-16-04.sh
+
+%post
+	# Set environment variables
+	# Note: if a variable needs to be available inside of the container, add it to $SINGULARITY_ENVIRONMENT
+	WD=/hope-singularity-wd		# Directory created in %setup
+
+	cd $WD 
+	
+	./ubuntu-16-04.sh		# Run package installation script
+
+	# Export any environment variables that should be available inside of the container
+	echo "export WD=\"${WD}\"" >> $SINGULARITY_ENVIRONMENT
