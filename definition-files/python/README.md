@@ -1,9 +1,10 @@
 # Creating a Python Definition File
+This document describes how a Python definition file is created.<br><br>
 
-## Table of Contents
+## Contents
 1. [Required Files](#required-files)
 2. [Sections](#sections)
-3. [Requesting a Container with Specific Versions or Packages](#requesting-a-container-with-specific-versions-or-packages)
+<br>
 
 ## Required Files
 Three files are required for this definition file: `install-python.sh`, `install-packages.sh`, and a list of packages to install inside of the container.

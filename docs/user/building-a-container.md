@@ -8,6 +8,7 @@ Singularity's documentation is thorough and provides clear examples. Therefore, 
 2. [Writing the Definition File](#writing-the-definition-file)
     + [Header](#header)
     + [Sections](#sections)
+3. [Creating a GPU-enabled Container](#creating-a-gpu-enabled-container)
 3. [Creating the Singularity Image File](#creating-the-singularity-image-file)
 4. [Running the Container](#running-the-container)
 5. [Next Steps](#next-steps)</br></br>
@@ -106,6 +107,20 @@ From: centos:7
 ```
 
 Further documentation on sections can be found [here](https://sylabs.io/guides/3.3/user-guide/definition_files.html#sections)</br></br>
+
+## Creating a GPU-enabled Container
+To give your container access to GPUs on a host machine, you must bootstrap your definition file to a pre-made GPU image. These images provide the CUDA drivers necessary to communicate with the host GPUs.
+
+The CUDA images are stored in `$SIF_FILES` and begin with `cuda` followed by a version number. To use one of these images, use the `localimage` `Bootstrap` directive followed by the path to the image file:
+```
+Bootstrap: localimage
+From: /home/hope-singularity/image-files/cuda-10.sif
+```
+
+The rest of the definition file can have the same sections listed above.
+
+Note that these images use Ubuntu 16.04 and that they must be run with the `--nv` flag to access the host GPUs. See [Running a Singularity Job with Slurm](https://github.com/hopehpc/hope-singularity/blob/master/docs/user/running-a-singularity-job-with-slurm.md) for details.
+<br><br>
 
 ## Creating the Singularity Image File
 Once the def file is written, the `singularity build` command can be used to build a `.sif` file.
