@@ -1,0 +1,11 @@
+Bootstrap: localimage 
+From: /home/hope-singularity/image-files/ubuntu-16-04.sif
+
+%files
+	# Copy installation scripts from the host to /hope-singularity-wd created in base image
+	/home/hope-singularity/definition-files/python/scripts/install-python.sh /hope-singularity-wd/install-python.sh
+	/home/hope-singularity/definition-files/python/scripts/install-packages.sh /hope-singularity-wd/install-packages.sh
+
+%post
+	# Install Python setuptools
+	apt-get install -y --no-install-recommends python3-setuptools	
