@@ -1,0 +1,43 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%setup
+    # Create a directory to store any files copied over or created
+    mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy all of the installation scripts
+    /home/hope-singularity/definition-files/amber18/scripts/setup_ubuntu-18-04.sh /hope-singularity-wd/setup_ubuntu-18-04.sh
+    /home/hope-singularity/definition-files/amber18/scripts/install_mpich.sh /hope-singularity-wd/install_mpich.sh
+    /home/hope-singularity/definition-files/amber18/scripts/build_amber_serial.sh /hope-singularity-wd/build_amber_serial.sh
+
+    # Copy the AMBER installation files
+    /home/hope-singularity/definition-files/amber18/source/Amber18.10apr18.tar.bz2 /usr/local/
+    /home/hope-singularity/definition-files/amber18/source/AmberTools18.10apr18.tar.bz2 /usr/local/
+
+%environment
+    # These will be available to users at runtime (but not at build time)
+    export AMBERHOME=/usr/local/amber18
+
+%post
+    # Set environment variables for installation time
+    export AMBERHOME=/usr/local/amber18
+    export SSE_TYPES=SSE4.2,SSE3 
+    WD=/hope-singularity-wd		# Directory created in %setup
+
+
+    cd $WD 
+    ./setup_ubuntu-18-04.sh		# Run package installation script
+    #./install_mpich.sh                  # Install MPICH
+
+    cd /usr/local                       # Extract AMBER source
+    tar -xjf AmberTools18.10apr18.tar.bz2
+    tar -xjf Amber18.10apr18.tar.bz2
+    rm AmberTools18.10apr18.tar.bz2     # Remove tarballs (not needed anymore)
+    rm Amber18.10apr18.tar.bz2
+    # at this point the SIF file is 0.64 GB when done
+
+    cd $WD 
+    ./build_amber_serial.sh             # Build AMBER and AmberTools serial versions
+
+

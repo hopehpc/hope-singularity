@@ -1,0 +1,199 @@
+Bootstrap: library
+From: centos:7.6
+# This recipe is for amber serial and CUDA versions
+# The serial build (without MPICH) takes about 40 minutes. Sif file is 1.2GB
+# Approximate timins:
+#    Building serial 45 mins
+#    Buliding MPI 
+#    Testing AmberTools serial
+#    Testing amber serial 
+
+%setup
+    # Create a directory to store any files copied over or created
+    mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy all of the installation scripts
+    /home/hope-singularity/definition-files/amber18/scripts/setup_centos-7-6.sh /hope-singularity-wd/
+    #/home/hope-singularity/definition-files/amber18/scripts/install_mpich.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/scripts/install_cuda.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/scripts/build_amber_serial_cuda.sh /hope-singularity-wd/
+
+    # Copy the AMBER installation files and customized files
+    #/home/hope-singularity/definition-files/amber18/source/mpich-3.1.4.tar.gz /usr/local/
+    /home/hope-singularity/definition-files/amber18/source/cuda-repo-rhel7-9-1-local-9.1.85-1.x86_64.rpm /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/source/cuda-repo-rhel7-9-1-local-cublas-performance-update-1-1.0-1.x86_64.rpm /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/source/cuda-repo-rhel7-9-1-local-compiler-update-1-1.0-1.x86_64.rpm /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/source/cuda-repo-rhel7-9-1-local-cublas-performance-update-3-1.0-1.x86_64.rpm /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/source/Amber18.10apr18.tar.bz2 /usr/local/
+    /home/hope-singularity/definition-files/amber18/source/AmberTools18.10apr18.tar.bz2 /usr/local/
+    /home/hope-singularity/definition-files/amber18/source/amber.withcuda.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/source/amber.withcuda.csh /hope-singularity-wd/
+
+    # Copy scripts to run AMBER test jobs
+    /home/hope-singularity/definition-files/amber18/scripts/BKtest_at_serial_x5650.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/scripts/BKtest_pmemd_serial_x5650.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/scripts/BKtest_at_mpin_x5650.sh /hope-singularity-wd/
+    /home/hope-singularity/definition-files/amber18/scripts/BKtest_pmemd_mpin_x5650.sh /hope-singularity-wd/
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+    export AMBERHOME=/usr/local/amber18
+
+%post
+    # Note the time
+    echo
+    echo ***Done with prep. Beginning installation steps.
+    echo ***The current time is `date`
+
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+    export AMBERHOME=/usr/local/amber18
+    export SSE_TYPES=SSE4.2,SSE3 
+    export WD=/hope-singularity-wd             # Directory created in %setup
+
+    # Actually perform setup/installation steps
+    cd $WD 
+    ./setup_centos-7-6.sh               # Run package installation script
+    echo ***Done with operating system setup.
+    echo ***The current time is `date`
+
+    ./install_cuda.sh                   # Install CUDA
+    echo ***Done with CUDA installation.
+    echo ***The current time is `date`
+    echo "which cuda gives:"
+    which cuda
+
+    #./install_mpich.sh                  # Install MPICH
+    #echo ***Done with MPICH installation.
+    #echo ***The current time is `date`
+
+    cd /usr/local                       # Extract AMBER source
+    tar -xjf AmberTools18.10apr18.tar.bz2
+    tar -xjf Amber18.10apr18.tar.bz2
+    chown -R root:root amber18
+    rm AmberTools18.10apr18.tar.bz2     # Remove tarballs (not needed anymore)
+    rm Amber18.10apr18.tar.bz2
+    echo ***Done with amber source prep.
+    echo ***The current time is `date`
+
+    cd $WD 
+    ./build_amber_serial_cuda.sh         # Build AMBER and AmberTools 
+    echo ***Done building amber serial and cuda.
+    echo ***The current time is `date`
+
+    # Cleanup. No one will need object files or any of
+    #   those things, so remove them all.
+    cd $AMBERHOME
+    make clean
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Done building amber.  
+    # Need to add cuda into the path and library path
+    # Do this by copying premade versions of amber.sh and amber.csh
+    cd $AMBERHOME
+    mv amber.sh amber.sh.000
+    mv $WD/amber.withcuda.sh amber.sh
+    chown root:root amber.sh
+    chmod 664 amber.sh
+    mv amber.csh amber.csh.000
+    mv $WD/amber.withcuda.csh amber.csh
+    chown root:root amber.csh
+    chmod 664 amber.csh
+    
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Done creating container.
+    # Now run tests of amber to be sure things are working properly.
+    # (Because one needs to be root to run these tests and because
+    #  Singularity is super strict, this is hard to do after the 
+    #  container is done.)
+    # If you are going to run MPI tests then run both.
+    #  There is setup stuff in serial that
+    #  is not present in the MPI section.
+    testserial=1
+    testmpi=0
+
+    if [ $testserial -eq 1 ]
+    then
+      echo ***Debugging details about the current node
+      df -hl
+      echo Working dir is `pwd`
+      echo Hostname is `hostname`
+      echo OS release is `cat /etc/os-release`
+      echo GCC version is `gcc --version`
+      username=`whoami`
+      echo Username is $username
+      echo Partial CPUinfo is:
+      cat /proc/cpuinfo | grep 'model name' | head -n 1
+      cat /proc/cpuinfo | grep 'cache size' | head -n 1
+      cat /proc/cpuinfo | grep 'cpu cores' | head -n 1
+      echo Total cores/node: `cat /proc/cpuinfo | awk "/processor/ {count = count +1; print count}" | tail -n 1`
+      echo "Memory information for this node (in MB) is:"
+      free -m
+
+      echo AMBERHOME is set to:
+      echo $AMBERHOME
+      . $AMBERHOME/amber.sh
+
+      echo **Running AmberTools serial tests
+      cd $WD
+      ./BKtest_at_serial_x5650.sh
+      echo ***Done running AmberTools serial tests.
+      echo ***The current time is `date`
+
+      echo **Running Amber serial test
+      cd $WD
+      ./BKtest_pmemd_serial_x5650.sh
+      echo ***Done running Amber pmemd serial tests.
+      echo ***The current time is `date`
+    fi
+
+    if [ $testmpi -eq 1 ]
+      echo **Running AmberTools 2 core tests
+      cd $WD
+      ./BKtest_at_mpin_x5650.sh 2
+      echo ***Done running AmberTools 2 core tests.
+      echo ***The current time is `date`
+
+      echo **Running AmberTools 4 core tests
+      cd $WD
+      ./BKtest_at_mpin_x5650.sh 4
+      echo ***Done running AmberTools 4 core tests.
+      echo ***The current time is `date`
+
+      echo **Running Amber 2 core tests
+      cd $WD
+      ./BKtest_pmemd_mpin_x5650.sh 2
+      echo ***Done running Amber pmemd 2 core tests.
+      echo ***The current time is `date`
+
+      echo **Running Amber 4 core tests
+      cd $WD
+      ./BKtest_pmemd_mpin_x5650.sh 4
+      echo ***Done running Amber pmemd 4 core tests.
+      echo ***The current time is `date`
+
+      echo **Running Amber 8 core tests
+      cd $WD
+      ./BKtest_pmemd_mpin_x5650.sh 8
+      echo ***Done running Amber pmemd 8 core tests.
+      echo ***The current time is `date`
+
+      echo **Running Amber 11 core tests
+      cd $WD
+      ./BKtest_pmemd_mpin_x5650.sh 11 
+      echo ***Done running Amber pmemd 11 core tests.
+      echo ***The current time is `date`
+    fi
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Done with everything
+    # Cleanup the temp directory we used for this installation stuff
+    rm -rf /hope-singularity-wd/
+
+%runscript
+    # Whatever is here executes when someone does singularity run <this sif file> <script>
+    #   The exec $@ line executes whatever script is given as a command line argument
+    exec $@
+
