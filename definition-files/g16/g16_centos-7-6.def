@@ -1,0 +1,48 @@
+Bootstrap: library
+From: centos:7.6
+
+%files
+	/home/hope-singularity/definition-files/g16/g16.tar.bz2 /usr/local/
+
+%environment
+	export g16root=/usr/local
+	export GAUSS_SCRDIR=/scratch
+
+%post
+    #~~~~~~~~~~~~~~~~~~
+    # Do the base CentOS installation stuff
+    yum --assumeyes update
+    yum --assumeyes group install "Development Tools"
+    yum --assumeyes install \
+        boost boost-devel hostname man nano sudo tcsh vim wget which 
+    # Installation of python3 requires the EPEL repository
+    #   (The EL in EPEL is for Enterprise Linux. It is maintained 
+    #    by Fedora for RedHat Enterprise and CentOS, so it 
+    #    should be trustworthy.)
+    #yum --assumeyes install epel-release
+    #yum --assumeyes install \
+    #    python2-pip python3 python3-pip
+
+    #pip install --upgrade pip
+    #pip install numpy
+    #pip3 install numpy
+    #pip install scipy
+    #pip3 install scipy
+
+    # Unpack g16 and set proper ownership and permissions
+    cd /usr/local
+    tar -xvf g16.tar.bz2
+    # Following doesn't work using group 'g16'. Assume g16 is number 499
+    chown -R root:499 g16
+    chmod -R o-rwx g16 
+
+    # Cleanup tarball
+    rm -rf /usr/local/g16.tar.bz2
+
+%runscript
+        echo "The g16root variable contains the location of the Gaussian installation."
+        echo "\$g16root/g16/bsd/g16.profile (or g16.login) must be sourced prior to"
+        echo "running a calculation."
+        echo "In addition, GAUSS_SCRDIR is defined as /scratch." 
+	exec $@
+
