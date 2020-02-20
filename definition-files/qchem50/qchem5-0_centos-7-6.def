@@ -1,0 +1,80 @@
+Bootstrap: library
+From: centos:7.6
+
+%setup
+    # Create a directory to store any files copied over or created
+    #mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy installation scripts
+    #/home/hope-singularity/definition-files/qchem50/scripts/build_qchem5-0.sh /hope-singularity-wd/
+
+    # Copy the Q-Chem installation files 
+    /home/hope-singularity/definition-files/qchem50/source/qchem-5.0.tgz /usr/local/
+
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+    export QCPATH=/usr/local/qchem-5.0
+
+%post
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+    #WD=/hope-singularity-wd             # Directory created in %setup
+
+    echo Done with prep.
+    echo The current time is `date`
+
+
+    #~~~~~~~~~~~~~~~~~~
+    # Do the base CentOS installation stuff
+    yum --assumeyes update
+
+    #(Development Tools yields sif file of 266MB)
+    yum --assumeyes group install "Development Tools"
+
+    yum --assumeyes install \
+        boost boost-devel hostname man nano sudo tcsh vim wget which 
+
+    # Installation of python3 requires the EPEL repository
+    #   (The EL in EPEL is for Enterprise Linux. It is maintained 
+    #    by Fedora for RedHat Enterprise and CentOS, so it 
+    #    should be trustworthy.)
+    yum --assumeyes install epel-release
+    yum --assumeyes install \
+        python2-pip python3 python3-pip
+
+    pip install --upgrade pip
+    pip install numpy
+    pip3 install numpy
+    pip install scipy
+    pip3 install scipy
+
+    echo Done with operating system setup.
+    echo The current time is `date`
+
+    #~~~~~~~~~~~~~~~~~~
+    # Do the Q-Chem install
+
+    cd /usr/local 
+    tar xzf qchem-5.0.tgz
+    # Get the most up to date version of the manual
+    cd /usr/local/qchem-5.0/doc
+    wget -N http://www.q-chem.com/download/qc50/doc/qchem_manual_5.0.pdf
+
+    echo Done with qchem installation.
+    echo The current time is `date`
+
+    #~~~~~~~~~~~~~~~~~~
+    # Done with everything
+    # Cleanup installation stuff
+    #rm -rf /hope-singularity-wd/
+    rm -rf /usr/local/qchem-5.0.tgz
+
+%runscript
+    # Whatever is here executes when someone does singularity run <this sif file> <script>
+    #   The exec $@ line executes whatever script is given as a command line argument
+    echo "The QCPATH variable contains the location of the Q-Chem installation."
+    echo "Source \$QCPATH/qcenv.sh (or .csh) prior to running a calculation."
+    exec $@
+

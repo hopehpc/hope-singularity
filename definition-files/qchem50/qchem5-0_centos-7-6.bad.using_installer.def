@@ -1,0 +1,79 @@
+Bootstrap: library
+From: centos:7.6
+
+%setup
+    # Create a directory to store any files copied over or created
+    mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy installation scripts
+    /home/hope-singularity/definition-files/qchem50/scripts/build_qchem5-0.sh /hope-singularity-wd/
+
+    # Copy the Q-Chem installation files and customized files
+    /home/hope-singularity/definition-files/qchem50/source/qcinstall.sh /usr/local/
+    /home/hope-singularity/definition-files/qchem50/source/qchem_manual_5.0.pdf /usr/local/
+    /home/hope-singularity/definition-files/qchem50/source/qchem.license.dat /usr/local/
+    /home/hope-singularity/definition-files/qchem50/source/qchem.license.dat.serial /usr/local/
+
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+
+%post
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+    WD=/hope-singularity-wd             # Directory created in %setup
+
+    echo Done with prep.
+    echo The current time is `date`
+
+
+    #~~~~~~~~~~~~~~~~~~
+    # Do the base CentOS installation stuff
+    yum --assumeyes update
+
+    #(Development Tools yields sif file of 266MB)
+    yum --assumeyes group install "Development Tools"
+
+    yum --assumeyes install \
+        boost boost-devel hostname man nano sudo tcsh vim wget which 
+
+    # Installation of python3 requires the EPEL repository
+    #   (The EL in EPEL is for Enterprise Linux. It is maintained 
+    #    by Fedora for RedHat Enterprise and CentOS, so it 
+    #    should be trustworthy.)
+    yum --assumeyes install epel-release
+    yum --assumeyes install \
+        python2-pip python3 python3-pip
+
+    pip install --upgrade pip
+    pip install numpy
+    pip3 install numpy
+    pip install scipy
+    pip3 install scipy
+
+    echo Done with operating system setup.
+    echo The current time is `date`
+
+    #~~~~~~~~~~~~~~~~~~
+    # Do the Q-Chem install
+
+    cd $WD 
+    ./build_qchem5-0.sh    # Run package installation script
+
+    echo Done with qchem installation.
+    echo The current time is `date`
+
+    #~~~~~~~~~~~~~~~~~~
+    # Done with everything
+    # Cleanup the temp directory we used for this installation stuff
+    rm -rf /hope-singularity-wd/
+
+%runscript
+    # Whatever is here executes when someone does singularity run <this sif file> <script>
+    #   The exec $@ line executes whatever script is given as a command line argument
+    exec $@
+
+
+
+
