@@ -1,0 +1,43 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%files
+        # Copy the mothur zip file into /usr/local
+        # This was downloaded from the location seen below in the MOTHUR= line.
+        #/home/hope-singularity/definition-files/mothur/source/Mothur-1.43.0.linux.zip /usr/local/Mothur.linux.zip
+        /home/hope-singularity/definition-files/mothur/source/Mothur-1.43.0.Ubuntu_18.zip /usr/local/Mothur.linux.zip
+
+%post
+	# Mothur executable
+        #MOTHUR=https://github.com/mothur/mothur/releases/download/v.1.43.0/Mothur.Ubuntu_18.zip
+
+	# Download dependencies
+	apt-get update
+	apt-get install -y htop man-db nano vim less \
+                           time wget unzip build-essential
+	
+	# Download and/or unzip mothur
+        cd /usr/local
+	#wget $MOTHUR
+	unzip Mothur.linux.zip
+	cd mothur
+
+        # This is an odd install, but we just need to copy
+        #   each of the six individual executables into /usr/bin
+        #   Do this by creating links form /usr/bin to /usr/local/mothur
+	DEST=/usr/bin
+        SOURCE=/usr/local/mothur
+        ln -s $SOURCE/mothur $DEST/
+        ln -s $SOURCE/uchime $DEST/
+        ln -s $SOURCE/vsearch $DEST/
+        SOURCE=/usr/local/mothur/blast/bin
+        ln -s $SOURCE/blastall $DEST/
+        ln -s $SOURCE/formatdb $DEST/
+        ln -s $SOURCE/megablast $DEST/
+
+        # Cleanup the zip file
+        rm /usr/local/Mothur.linux.zip
+
+%runscript
+        echo "Mothur executables are installed in /usr/bin"
+        exec $@
