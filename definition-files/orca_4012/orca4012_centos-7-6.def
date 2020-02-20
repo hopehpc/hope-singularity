@@ -1,0 +1,132 @@
+Bootstrap: library
+From: centos:7.6
+# This recipe is for ORCA 4.0.1.2 build. 
+# It starts from a tarball of already built executables provided by Richard Lord.
+# Richard recommends openmpi 2.0.2.  
+
+%setup
+    # Create a directory to store any files needed for installation
+    #mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy all of the installation scripts
+    #/home/hope-singularity/definition-files/amber18/scripts/setup_centos-7-6.sh /hope-singularity-wd/
+
+    # Copy the installation files and customized files
+    /home/hope-singularity/definition-files/orca_4012/source/orca-4012.tar.gz /usr/local/
+    /home/hope-singularity/definition-files/orca_4012/source/openmpi-2.0.2.tar.gz /usr/local/
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+    export ORCADIR=/usr/local/orca-4012
+
+%post
+    # Note the time
+    echo Done with prep. Beginning installation steps.
+    echo The current time is `date`
+
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+    #WD=/hope-singularity-wd             # Directory created in %setup
+    # The orca tarball is large, so this creates space problems in the usual
+    #   scratch location. The following lines define better scratch locations.
+    #SINGULARITY_CACHEDIR=/scratch  
+    #SINGULARITY_TMPDIR=/scratch
+    echo The environment is:
+    env
+
+    # Actually perform setup/installation steps
+    
+    # Operating system setup:
+    yum --assumeyes update
+
+    yum --assumeyes group install "Development Tools"
+
+    yum --assumeyes install \
+          boost boost-devel hostname man nano sudo tcsh vim wget which 
+
+    # Installation of python3 requires the EPEL repository
+    #   (The EL in EPEL is Enterprise Linux. It is maintained
+    #    by Fedora for RedHat Enterprise and CentOS, so it
+    #    should be trustworthy.)
+    # Note that python is not necessary for amber, but is 
+    #    probably useful to users for analysis/processing
+    #    of results.
+#    yum --assumeyes install epel-release
+#    yum --assumeyes install \
+#          python2-pip python3 python3-devel python3-pip
+#
+#    pip install --upgrade pip
+#    pip install numpy
+#    pip3 install numpy
+#    pip install scipy
+#    pip3 install scipy
+
+    # Done installing O/S
+    echo Done with operating system setup.
+    echo The current time is `date`
+
+    # Unpack ORCA
+    #echo Checking disk space
+    #df -hl
+    #echo 
+    # Had trouble with running out of disk space during the build.
+    # Fixed this by setting SINGULARITY_TMPDIR in build.sh and passing it
+    # to the singularity build command using sudo's --preserve-env.  e.g.:
+    #     export SINGULARITY_TMPDIR=/scratch
+    #     sudo --preserve-env=SINGULARITY_TMPDIR singularity build $SIF_FILES/$SIF $DEF
+    echo Unpacking orca tarball
+    cd /usr/local
+    tar xzf orca-4012.tar.gz
+    mv orca orca-4012
+    chown -R root:root orca-4012
+    cd orca-4012
+    # Create orca setup files for users
+    cat <<"@EOF" >orca_setup.sh
+# Set up some environment variables for orca use
+export MPI_ROOT=/usr/local/openmpi-202
+export PATH=${PATH}:${ORCADIR}:${MPI_ROOT}/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${MPI_ROOT}/lib
+
+@EOF
+
+    cat <<"@EOF" >orca_setup.csh
+# Set up some environment variables for orca use
+setenv MPI_ROOT "/usr/local/openmpi-202"
+setenv PATH "${PATH}:${ORCADIR}:${MPI_ROOT}/bin"
+setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${MPI_ROOT}/lib"
+
+@EOF
+
+    echo Done with ORCA installation.
+    echo The current time is `date`
+
+    # Unpack, configure, and install openmpi
+    cd /usr/local
+    tar -xzf openmpi-2.0.2.tar.gz
+    mv openmpi-2.0.2 openmpi-2.0.2-source
+    cd openmpi-2.0.2-source
+    ./configure --prefix=/usr/local/openmpi-202
+    make all install
+    
+    echo Done with OpenMPI installation.
+    echo The current time is `date`
+
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Done with everything
+    # Cleanup the temp directory we used for this installation stuff
+    #rm -rf /hope-singularity-wd/
+    # And cleanup other installation files
+    rm -f /usr/local/orca-4012.tar.gz
+    rm -f /usr/local/openmpi-2.0.2.tar.gz
+    rm -rf /usr/local/openmpi-2.0.2-source
+
+%runscript
+    # Whatever is here executes when someone does singularity run <this sif file> <script>
+    #   The exec $@ line executes whatever script is given as a command line argument
+    echo "The ORCADIR variable contains the location of the ORCA installation."
+    echo "The ORCA environment setup file must be sourced before it can be used."
+    echo "This file is \$ORCADIR/orca_setup.sh (or orca_setup.csh)."
+    exec $@
+
