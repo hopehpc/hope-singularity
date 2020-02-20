@@ -1,0 +1,68 @@
+Bootstrap: library
+From: centos:7.6
+
+%setup
+    # Create a directory to store any files copied over or created
+    #mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy any needed scripts or source materials
+    /home/hope-singularity/definition-files/base/source/mpich-3.3.1.tar.gz /usr/local/
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+    export LD_LIBRARY_PATH=/usr/local/mpich-3.3.1/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/mpich-3.3.1/bin:$PATH
+
+%post
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+
+    yum --assumeyes update
+
+    #(Development Tools yields sif file of 266MB)
+    yum --assumeyes group install "Development Tools"
+
+    yum --assumeyes install \
+        boost boost-devel hostname man nano sudo tcsh vim wget which 
+
+    # Installation of python3 requires the EPEL repository
+    #   (The EL in EPEL is for Enterprise Linux. It is maintained 
+    #    by Fedora for RedHat Enterprise and CentOS, so it 
+    #    should be trustworthy.)
+    yum --assumeyes install epel-release
+    yum --assumeyes install \
+        python2-pip python3 python3-pip
+
+    pip install --upgrade pip
+    pip install numpy
+    pip3 install numpy
+    pip install scipy
+    pip3 install scipy
+
+    # Install MPICH
+    cd /usr/local
+    #wget http://www.mpich.org/static/downloads/3.3.1/mpich-3.3.1.tar.gz
+    tar xzf mpich-3.3.1.tar.gz
+    mv mpich-3.3.1 mpich-3.3.1_source
+    chown -R root:root mpich-3.3.1_source
+    rm mpich-3.3.1.tar.gz
+
+    # Create directory for mpich executables.
+    mkdir mpich-3.3.1
+
+    # Move to mpich source directory
+    cd mpich-3.3.1_source
+
+    ./configure --prefix=/usr/local/mpich-3.3.1
+    make -j2  #the j2 just builds faster by letting it use 2 cores
+    make install
+
+%runscript
+    # Whatever is here executes when someone does singularity run <this sif file> <script>
+    #   The exec $@ line executes whatever script is given as a command line argument
+    echo MPICH bin and libraries have already been added to appropriate paths.
+    echo "You can go ahead and compile using, e.g. mpicc"
+    echo "or you can run using mpiexec or mpirun."
+    exec $@
+

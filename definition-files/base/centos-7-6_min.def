@@ -1,0 +1,28 @@
+Bootstrap: library
+From: centos:7.6
+
+%setup
+    # Create a directory to store any files copied over or created
+    #mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+    # Copy the base package install script
+    #/home/hope-singularity/definition-files/base/scripts/ubuntu-18-04.sh /hope-singularity-wd/ubuntu-18-04.sh
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+
+%post
+    # Set environment variables for build time
+    # Note: if a variable needs to be available inside of the container at runtime, add it above
+
+    yum --assumeyes update
+
+    yum --assumeyes install \
+        bzip2 file gzip hostname less man \
+        nano openssh-clients tar tcsh \
+        unzip vim wget which xz zip 
+
+    # Final sif file size is 176MB
+    # consider also util-linux emacs rsync
+

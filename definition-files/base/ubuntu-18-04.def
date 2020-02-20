@@ -1,0 +1,22 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%setup
+	# Create a directory to store any files copied over or created
+	mkdir ${SINGULARITY_ROOTFS}/hope-singularity-wd
+
+%files
+	# Copy the base package install script
+	/home/hope-singularity/definition-files/base/scripts/ubuntu-18-04.sh /hope-singularity-wd/ubuntu-18-04.sh
+
+%environment
+    # These variables will be available to users at runtime (but not at build time)
+
+%post
+	# Set environment variables
+	# Note: if a variable needs to be available inside of the container, add it above
+	WD=/hope-singularity-wd		# Directory created in %setup
+
+	cd $WD 
+	./ubuntu-18-04.sh		# Run package installation script
+
