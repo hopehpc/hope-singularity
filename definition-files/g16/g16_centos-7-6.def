@@ -44,5 +44,5 @@ From: centos:7.6
         echo "\$g16root/g16/bsd/g16.profile (or g16.login) must be sourced prior to"
         echo "running a calculation."
         echo "In addition, GAUSS_SCRDIR is defined as /scratch." 
-	exec $@
+	exec "$@"
 

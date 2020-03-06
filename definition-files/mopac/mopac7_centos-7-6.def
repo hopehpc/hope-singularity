@@ -1,0 +1,28 @@
+Bootstrap: library
+From: centos:7.6
+
+%files
+	/home/hope-singularity/definition-files/mopac/mopac7.tar /usr/local/
+
+%environment
+
+%post
+        #~~~~~~~~~~~~~~~~~~
+        # Do the base CentOS installation stuff
+        yum --assumeyes update
+        yum --assumeyes group install "Development Tools"
+        yum --assumeyes install \
+            boost boost-devel hostname man nano sudo tcsh vim wget which
+	cd /usr/local
+	tar -xvf mopac7.tar
+	chown -R root:root mopac7
+	cd /usr/local/mopac7/source
+	make dynamic
+
+%runscript
+        #echo "The g16root variable contains the location of the Gaussian in stallation."
+        #echo "\$g16root/g16/bsd/g16.profile (or g16.login) must be sourced prior to"
+        #echo "running a calculation."
+        #echo "In addition, GAUSS_SCRDIR is defined as /scratch." 
+        exec "$@"
+
