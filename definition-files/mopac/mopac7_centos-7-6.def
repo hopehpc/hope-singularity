@@ -5,6 +5,7 @@ From: centos:7.6
 	/home/hope-singularity/definition-files/mopac/mopac7.tar /usr/local/
 
 %environment
+        export mopacroot=/usr/local/mopac7
 
 %post
         #~~~~~~~~~~~~~~~~~~
@@ -18,11 +19,11 @@ From: centos:7.6
 	chown -R root:root mopac7
 	cd /usr/local/mopac7/source
 	make dynamic
+        cd /usr/local
+        rm mopac7.tar
 
 %runscript
-        #echo "The g16root variable contains the location of the Gaussian in stallation."
-        #echo "\$g16root/g16/bsd/g16.profile (or g16.login) must be sourced prior to"
-        #echo "running a calculation."
-        #echo "In addition, GAUSS_SCRDIR is defined as /scratch." 
+        echo "MOPAC7 is installed in /usr/local/mopac7.  This location is stored in"
+        echo "the mopacroot environment variable."
         exec "$@"
 
