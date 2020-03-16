@@ -35,8 +35,9 @@ echo The following is running inside the container
 df -h
 echo Working dir is `pwd`
 echo Hostname is `hostname`
-echo Source qchem environment setup
-. $QCPATH/qcenv.sh
+echo Environment is
+env
+echo ""
 echo Run job
 if [ $SLURM_NPROCS -eq 1 ]
 then

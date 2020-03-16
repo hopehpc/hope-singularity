@@ -51,9 +51,9 @@ echo The following is running inside the container
 df -h
 echo Working dir is `pwd`
 echo Hostname is `hostname`
-echo Source the orca setup script
-source $ORCADIR/orca_setup.sh
-
+echo Environment is
+env
+echo
 echo Run job
 $ORCADIR/orca $BASEFILE.in >$BASEFILE.out 2>$BASEFILE.err
 

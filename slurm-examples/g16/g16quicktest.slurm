@@ -37,9 +37,9 @@ echo Some information about the node we are running on
 df -h
 echo Working dir is `pwd`
 echo Hostname is `hostname`
+echo Environment is
+env
 echo
-echo Source g16 environment setup
-. $g16root/g16/bsd/g16.profile
 echo Run job
 g16 <$BASEFILE.in >$BASEFILE.out 2>$BASEFILE.err
 

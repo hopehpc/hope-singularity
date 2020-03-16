@@ -40,9 +40,12 @@ From: centos:7.6
     rm -rf /usr/local/g16.tar.bz2
 
 %runscript
-        echo "The g16root variable contains the location of the Gaussian installation."
-        echo "\$g16root/g16/bsd/g16.profile (or g16.login) must be sourced prior to"
-        echo "running a calculation."
-        echo "In addition, GAUSS_SCRDIR is defined as /scratch." 
-	exec "$@"
+    echo "The g16root variable contains the location of the Gaussian installation."
+    echo "The environment setup script, \$g16root/g16/bsd/g16.profile will be"
+    echo "automatically sourced for you and the g16 executable will be on your path."
+    echo "If you wish to use this container WITHOUT the environment setup script"
+    echo "then use 'singularity exec' rather than 'singularity run'."
+    echo "In either case, GAUSS_SCRDIR is defined as /scratch." 
+    source $g16root/g16/bsd/g16.profile
+    exec "$@"
 

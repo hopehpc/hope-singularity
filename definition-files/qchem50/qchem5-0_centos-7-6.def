@@ -75,6 +75,10 @@ From: centos:7.6
     # Whatever is here executes when someone does singularity run <this sif file> <script>
     #   The exec $@ line executes whatever script is given as a command line argument
     echo "The QCPATH variable contains the location of the Q-Chem installation."
-    echo "Source \$QCPATH/qcenv.sh (or .csh) prior to running a calculation."
+    echo "The environment setup script, \$QCPATH/qcenv.sh, will automatically be"
+    echo "sourced for you and the qchem executable will be on your path."
+    echo "If you wish to use this container WITHOUT the environment setup script"
+    echo "then use 'singularity exec' rather than 'singularity run'."
+    source $QCPATH/qcenv.sh
     exec "$@"
 

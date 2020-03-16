@@ -126,7 +126,11 @@ setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${MPI_ROOT}/lib"
     # Whatever is here executes when someone does singularity run <this sif file> <script>
     #   The exec $@ line executes whatever script is given as a command line argument
     echo "The ORCADIR variable contains the location of the ORCA installation."
-    echo "The ORCA environment setup file must be sourced before it can be used."
-    echo "This file is \$ORCADIR/orca_setup.sh (or orca_setup.csh)."
-    exec $@
+    echo "The environment setup script, \$ORCADIR/orca_setup.sh, will automatically be"
+    echo "sourced for you and the orca executable will be on your path."
+    echo "If you wish to use this container WITHOUT the environment setup script"
+    echo "then use 'singularity exec' rather than 'singularity run' and"
+    echo "source \$ORCADIR/orca_setup.sh (or orca_setup.csh)."
+    source $ORCADIR/orca_setup.sh
+    exec "$@"
 
